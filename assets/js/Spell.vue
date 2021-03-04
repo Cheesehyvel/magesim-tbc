@@ -110,8 +110,14 @@
 
                 if (spell.key == "arcane_blast" && this.talents.arcane_impact)
                     crit+= this.talents.arcane_impact*2;
-                if (this.state.clearcast && this.talents.arcane_potency)
-                    stats.crit+= this.talents.arcane_potency * 10;
+
+                if (this.state.buffs.clearcast && this.talents.arcane_potency)
+                    crit+= this.talents.arcane_potency * 10;
+
+                if (this.settings.debuffs.judgement_of_the_crusader)
+                    crit+= 3;
+                if (this.settings.buffs.moonkin_aura)
+                    crit+= 5;
 
                 return crit;
             },

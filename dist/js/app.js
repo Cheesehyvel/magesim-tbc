@@ -341,13 +341,13 @@ __webpack_require__.r(__webpack_exports__);
           misery: true,
           curse_of_elements: true,
           judgement_of_the_crusader: false,
+          judgement_of_wisdom: true,
           vampiric_touch: true
         },
         buffs: {
           totem_of_wrath: false,
           wrath_of_air: true,
           mana_spring: true,
-          judgement_of_wisdom: true,
           arcane_intellect: true,
           divine_spirit: true,
           improved_divine_spirit: false,
@@ -736,8 +736,9 @@ __webpack_require__.r(__webpack_exports__);
           log.text += " resists";
         }
 
-        log.text += " (" + cost + ")";
+        log.text += " (" + cost + ") [" + this.critChance(spell) + "%]";
         this.addLog(log);
+        if (this.settings.debuffs.judgement_of_wisdom && _.random(0, 1)) this.onManaGain(74, "Judgement of Wisdom");
 
         if (spell.key == "arcane_blast") {
           this.onBuffGain("arcane_blast");
@@ -1061,7 +1062,9 @@ __webpack_require__.r(__webpack_exports__);
     critChance: function critChance(spell) {
       var crit = this.stats.crit;
       if (spell.key == "arcane_blast" && this.talents.arcane_impact) crit += this.talents.arcane_impact * 2;
-      if (this.state.clearcast && this.talents.arcane_potency) stats.crit += this.talents.arcane_potency * 10;
+      if (this.state.buffs.clearcast && this.talents.arcane_potency) crit += this.talents.arcane_potency * 10;
+      if (this.settings.debuffs.judgement_of_the_crusader) crit += 3;
+      if (this.settings.buffs.moonkin_aura) crit += 5;
       return crit;
     },
     critMultiplier: function critMultiplier(spell) {
@@ -19388,6 +19391,65 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
+                        value: _vm.settings.debuffs.judgement_of_wisdom,
+                        expression: "settings.debuffs.judgement_of_wisdom"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(
+                        _vm.settings.debuffs.judgement_of_wisdom
+                      )
+                        ? _vm._i(
+                            _vm.settings.debuffs.judgement_of_wisdom,
+                            null
+                          ) > -1
+                        : _vm.settings.debuffs.judgement_of_wisdom
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.settings.debuffs.judgement_of_wisdom,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.settings.debuffs,
+                                "judgement_of_wisdom",
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.settings.debuffs,
+                                "judgement_of_wisdom",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(
+                            _vm.settings.debuffs,
+                            "judgement_of_wisdom",
+                            $$c
+                          )
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(" Judgement of Wisdom")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-item" }, [
+                _c("label", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
                         value: _vm.settings.debuffs.vampiric_touch,
                         expression: "settings.debuffs.vampiric_touch"
                       }
@@ -20046,63 +20108,6 @@ var render = function() {
                     }
                   }),
                   _vm._v(" Blessing of Wisdom")
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-item" }, [
-                _c("label", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.settings.buffs.judgement_of_wisdom,
-                        expression: "settings.buffs.judgement_of_wisdom"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(
-                        _vm.settings.buffs.judgement_of_wisdom
-                      )
-                        ? _vm._i(_vm.settings.buffs.judgement_of_wisdom, null) >
-                          -1
-                        : _vm.settings.buffs.judgement_of_wisdom
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.settings.buffs.judgement_of_wisdom,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(
-                                _vm.settings.buffs,
-                                "judgement_of_wisdom",
-                                $$a.concat([$$v])
-                              )
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.settings.buffs,
-                                "judgement_of_wisdom",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
-                          }
-                        } else {
-                          _vm.$set(
-                            _vm.settings.buffs,
-                            "judgement_of_wisdom",
-                            $$c
-                          )
-                        }
-                      }
-                    }
-                  }),
-                  _vm._v(" Judgement of Wisdom")
                 ])
               ]),
               _vm._v(" "),

@@ -117,6 +117,9 @@
                         <label><input type="checkbox" v-model="settings.debuffs.judgement_of_the_crusader"> Imp. Judgement of the Crusader</label>
                     </div>
                     <div class="form-item">
+                        <label><input type="checkbox" v-model="settings.debuffs.judgement_of_wisdom"> Judgement of Wisdom</label>
+                    </div>
+                    <div class="form-item">
                         <label><input type="checkbox" v-model="settings.debuffs.vampiric_touch"> Vampiric Touch</label>
                     </div>
                     <div class="form-item" v-if="settings.debuffs.vampiric_touch">
@@ -158,9 +161,6 @@
                     </div>
                     <div class="form-item">
                         <label><input type="checkbox" v-model="settings.buffs.blessing_of_wisdom"> Blessing of Wisdom</label>
-                    </div>
-                    <div class="form-item">
-                        <label><input type="checkbox" v-model="settings.buffs.judgement_of_wisdom"> Judgement of Wisdom</label>
                     </div>
                     <div class="form-item">
                         <label><input type="checkbox" v-model="settings.buffs.moonkin_aura"> Moonkin Aura</label>
@@ -267,13 +267,13 @@
                         misery: true,
                         curse_of_elements: true,
                         judgement_of_the_crusader: false,
+                        judgement_of_wisdom: true,
                         vampiric_touch: true,
                     },
                     buffs: {
                         totem_of_wrath: false,
                         wrath_of_air: true,
                         mana_spring: true,
-                        judgement_of_wisdom: true,
                         arcane_intellect: true,
                         divine_spirit: true,
                         improved_divine_spirit: false,
@@ -703,8 +703,11 @@
                         log.text+= " resists";
                     }
 
-                    log.text+= " ("+cost+")";
+                    log.text+= " ("+cost+") ["+this.critChance(spell)+"%]";
                     this.addLog(log);
+
+                    if (this.settings.debuffs.judgement_of_wisdom && _.random(0, 1))
+                        this.onManaGain(74, "Judgement of Wisdom");
 
                     if (spell.key == "arcane_blast") {
                         this.onBuffGain("arcane_blast");
